@@ -6,10 +6,6 @@ import os
 import uuid
 from time import sleep
 
-os.environ["OPENAI_API_KEY"] = (
-    "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"
-)
-
 
 IMG_MAX_WIDTH = 700
 IMG_MAX_HEIGH = 700
