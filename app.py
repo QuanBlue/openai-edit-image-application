@@ -5,6 +5,7 @@ from PIL import Image
 import os
 import uuid
 from time import sleep
+from openai import OpenAI
 
 
 IMG_MAX_WIDTH = 700
@@ -55,15 +56,6 @@ def remove_draw_zone(base_image, canvas_result):
     img_data = canvas_result.image_data
     img_pil = Image.fromarray(img_data.astype('uint8'), 'RGBA')
 
-    # client = OpenAI()
-    # response = client.images.edit(
-    #     model="dall-e-2",
-    #     image=open("step_1.png", "rb"),
-    #     mask=open("step_1_1.png", "rb"),
-    #     prompt="change the cat's expression to happy",
-    #     n=1,
-    # )
-    # image_url = response.data[0].url
     image = base_image.convert('RGBA').resize(img_pil.size)
 
     # split alpha channel of image (opacity channel) and convert black-white mask
@@ -77,10 +69,19 @@ def remove_draw_zone(base_image, canvas_result):
     return removed_image
 
 
-# @st.cache_data
 def load_image(image_path):
-    img = Image.open(image_path)
-    sleep(1)
+    try:
+        # case image is local path
+        img = Image.open(image_path)
+        sleep(1)
+    except:
+        # case image is http url
+        import requests
+        from io import BytesIO
+
+        response = requests.get(image_path)
+        img = Image.open(BytesIO(response.content))
+
     return img
 
 
@@ -88,8 +89,10 @@ def save_gen_image(image):
     import re
 
     try:
+        # case image is local path or http url
         image = load_image(image)
     except:
+        # case image is PNG/JPG/... type (pass)
         pass
 
     st.session_state.no_gen_img += 1
@@ -109,11 +112,7 @@ def save_gen_image(image):
                 os.remove(file_path)
 
     # remove image have index greater than st.session_state.no_gen_img in image list
-    print("--- rm bg ---")
-    print("no_gen_img:", st.session_state.no_gen_img)
-    print("st.session_state.list_img (old):", len(st.session_state.list_img))
     st.session_state.list_img = st.session_state.list_img[:st.session_state.no_gen_img - 1]
-    print("st.session_state.list_img (new):", len(st.session_state.list_img))
 
     # save gen image
     st.session_state.list_img.append(image)
@@ -233,10 +232,33 @@ def edit_image_page():
             if st.button(">", icon=":material/send:"):
                 # remove draw zone in image
                 canvas_result = st.session_state.canvas_result
+                # st.session_state.scaled_gen_image, st.session_state.canvas_width, st.session_state.canvas_height = scale_image(
+                #     canvas_result)
+
+                # print("canvas result sz:", canvas_result.size())
                 current_gen_image = st.session_state.list_img[st.session_state.no_gen_img - 1]
+                # print("current_gen_image sz:", current_gen_image.size())
+                current_img_path = os.path.join(
+                    GEN_IMG_DIR, f"{IMG_NAME_PREFIX}({st.session_state.no_gen_img}).png")
                 removed_image = remove_draw_zone(
                     current_gen_image, canvas_result)
-                save_gen_image(removed_image)
+                # print("current_gen_image sz:", current_gen_image.size())
+
+                removed_image.save("removed_image.png")
+                st.session_state.scaled_gen_image.save("base_image.png")
+
+                client = OpenAI()
+                response = client.images.edit(
+                    model="dall-e-2",
+                    image=open("base_image.png", 'rb'),
+                    mask=open("removed_image.png", 'rb'),
+                    prompt=change_prompt,
+                    n=1,
+                )
+                image_url = response.data[0].url
+                print("image url:", image_url)
+
+                save_gen_image(image_url)
 
                 # Reset image
                 st.session_state.canvas_result = None
