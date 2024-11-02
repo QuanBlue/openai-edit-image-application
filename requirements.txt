@@ -1,3 +1,4 @@
+# streamlit
 streamlit==1.39.0
 streamlit-camera-input-live==0.2.0
 streamlit-card==1.0.2
@@ -11,3 +12,6 @@ streamlit-keyup==0.2.4
 streamlit-notifications==0.1
 streamlit-toggle-switch==1.0.2
 streamlit-vertical-slider==2.5.5
+
+# openai
+openai==1.52.1

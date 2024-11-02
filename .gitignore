@@ -1,6 +1,9 @@
 /gen_image
-
+/test_image
 
 *.png
 *.jpg
 *.jpge
+
+*/__pycache__
+/__pycache__

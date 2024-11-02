@@ -8,6 +8,8 @@ from time import sleep
 from openai import OpenAI
 
 
+
+
 IMG_MAX_WIDTH = 700
 IMG_MAX_HEIGH = 700
 GEN_IMG_DIR = 'gen_image'
