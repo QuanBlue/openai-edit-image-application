@@ -38,6 +38,10 @@ CANVAS_CSS = """
             display: flex; justify-content: center; align-items: center; height: 100%;
         }
         
+        div[data-testid="InputInstructions"] {
+            visibility: hidden;
+        }
+        
         button[kind="secondary"]  {
             border: none !important;
         }
