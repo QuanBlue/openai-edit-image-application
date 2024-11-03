@@ -1,11 +1,12 @@
 import streamlit as st
 import utils.image_processing as img_proc
-# from main import go_to_page
 import utils.page_processing as pg_proc
 
 
 def show():
     st.header("Application")
+    
+    # prompt input
     prompt = st.text_input("Input your prompt:", placeholder="Prompt")
     bg_image = st.file_uploader(
         "Background image:", type=["png", "jpg"])

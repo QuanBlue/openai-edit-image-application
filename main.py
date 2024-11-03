@@ -1,11 +1,9 @@
-# https://docs.streamlit.io/get-started/tutorials/create-a-multipage-app
-
-from dotenv import load_dotenv
-import streamlit as st
 import os
 import uuid
-from pages import home, edit_image
 import config
+import streamlit as st
+from dotenv import load_dotenv
+from pages import home, edit_image
 
 
 # init sessions
@@ -38,7 +36,6 @@ st.set_page_config(page_title=config.APPLICATION_NAME, layout="centered",
 
 # custom app css
 st.markdown(f'<style>{config.APP_CSS}</style>', unsafe_allow_html=True)
-
 
 # nav page
 page_names_to_funcs = {

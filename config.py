@@ -1,13 +1,14 @@
-# Application
+# application config
 APPLICATION_NAME = 'Application'
 
-# Image
+# image config
 GEN_IMG_DIR = 'gen_image'
 IMG_NAME_PREFIX = 'generated_image'
 IMG_MAX_WIDTH = 700
 IMG_MAX_HEIGH = 700
+IMG_LOAD_TIME = 1
 
-# CSS
+# css config
 APP_CSS = """
     header {
         visibility: hidden
