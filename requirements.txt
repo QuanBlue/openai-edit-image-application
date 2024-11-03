@@ -15,3 +15,6 @@ streamlit-vertical-slider==2.5.5
 
 # openai
 openai==1.52.1
+
+# dotenv
+python-dotenv==0.19.2

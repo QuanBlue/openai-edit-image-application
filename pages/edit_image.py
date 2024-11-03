@@ -56,6 +56,8 @@ def show():
                     prompt=change_prompt,
                     n=1,
                 )
+                
+                
                 image_url = response.data[0].url
                 print("image url:", image_url)
 
@@ -71,7 +73,6 @@ def show():
             st.session_state.clear()
             st.cache_data.clear()
             
-
             st.session_state.canvas_key = str(uuid.uuid4())
             img_proc.delete_gen_images()
             pg_proc.go_to_page("home-page")
@@ -91,14 +92,18 @@ def show():
     st.session_state.scaled_gen_image, st.session_state.canvas_width, st.session_state.canvas_height = img_proc.scale_image(
         gen_image)
 
-    col1, col2, _, _ = st.columns([2, 1, 5, 5])
+    brush_sz_col, download_btn_col, announce_col, _ = st.columns([2, 1, 5, 5])
 
-    with col1:
+    with brush_sz_col:
         stroke_width = st.slider(
-            ">", 1, 100, 25, format="", label_visibility="collapsed")
-    with col2:
+            ">", 1, 150, 50, format="", label_visibility="collapsed")
+    with announce_col:
+        announce_container = st.container()
+    with download_btn_col:
         if st.button(">", icon=":material/download:", help="Download Image", use_container_width=True):
-            img_proc.download_image(st.session_state.no_gen_img)
+            img_proc.download_image(
+                st.session_state.no_gen_img, announce_container)
+
 
     st.session_state.canvas_result = st_canvas(
         fill_color="rgba(255, 165, 0, 0.3)",

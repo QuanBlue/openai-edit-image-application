@@ -6,22 +6,27 @@ from time import sleep
 from os import path, walk, listdir, remove
 import streamlit as st
 
-def scale_image(image):
-    # Resize image to maintain aspect ratio with max width and height of 700px
-    max_size = (config.IMG_MAX_WIDTH, config.IMG_MAX_HEIGH)
 
-    # Calculate the new size while maintaining the aspect ratio
-    image_ratio = image.width / image.height
-    max_ratio = max_size[0] / max_size[1]
-
-    if image_ratio > max_ratio:
-        # Image is wider than the maximum ratio
-        new_width = max_size[0]
-        new_height = int(max_size[0] / image_ratio)
+def scale_image(image, width=None, height=None):
+    if width and height:
+        new_width = width
+        new_height = height
     else:
-        # Image is taller than the maximum ratio
-        new_height = max_size[1]
-        new_width = int(max_size[1] * image_ratio)
+        # Resize image to maintain aspect ratio with max width and height of 700px
+        max_size = (config.IMG_MAX_WIDTH, config.IMG_MAX_HEIGH)
+
+        # Calculate the new size while maintaining the aspect ratio
+        image_ratio = image.width / image.height
+        max_ratio = max_size[0] / max_size[1]
+
+        if image_ratio > max_ratio:
+            # Image is wider than the maximum ratio
+            new_width = max_size[0]
+            new_height = int(max_size[0] / image_ratio)
+        else:
+            # Image is taller than the maximum ratio
+            new_height = max_size[1]
+            new_width = int(max_size[1] * image_ratio)
 
     scaled_image = image.resize((new_width, new_height), Image.LANCZOS)
     sleep(0.5)
@@ -36,7 +41,6 @@ def delete_gen_images():
             # Xóa file
             if path.isfile(file_path):
                 remove(file_path)
-        
 
 
 def remove_draw_zone(base_image, canvas_result):
@@ -66,8 +70,12 @@ def load_image(image_path):
         import requests
         from io import BytesIO
 
+        width = st.session_state.canvas_width
+        height = st.session_state.canvas_height
+
         response = requests.get(image_path)
         img = Image.open(BytesIO(response.content))
+        img, _, _ = scale_image(img, width, height)
 
     return img
 
@@ -115,7 +123,7 @@ def count_files_in_folder(folder_path):
         return None
 
 
-def download_image(index):
+def download_image(index, announce_container):
     # Lấy tên file từ đường dẫn
     image_path = path.join(
         config.GEN_IMG_DIR, f"{config.IMG_NAME_PREFIX}({index}).png")
@@ -126,4 +134,9 @@ def download_image(index):
     destination_path = path.join(downloads_folder, image_name)
     copy(image_path, destination_path)
 
-    # st.success("download success")
+    with announce_container:
+        timeout = 2
+        success_message = st.success(
+            "Download success", icon=":material/task_alt:")
+        sleep(timeout)
+        success_message.empty()
