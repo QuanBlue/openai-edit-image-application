@@ -32,10 +32,9 @@ def show():
                 quality="standard",
                 n=1,
             )
+            
             image_url = response.data[0].url
-            response = requests.get(image_url)
-            img = Image.open(BytesIO(response.content))
-            img.save("image1.jpg")
-            img_proc.save_gen_image("image1.jpg")
-            st.session_state.prompt = prompt
+            img_proc.save_gen_image(image_url)
+
+            # go to page
             pg_proc.go_to_page("edit-image-page")

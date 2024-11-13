@@ -74,7 +74,15 @@ def load_image(image_path):
         height = st.session_state.canvas_height
 
         # open then scale generated image to canvas size
-        response = requests.get(image_path)
+        try:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+            print("\n[+] Image path:", image_path)
+            response = requests.get(image_path, headers=headers, timeout=20)
+        except:
+            pass
+        
         img = Image.open(BytesIO(response.content))
         img, _, _ = scale_image(img, width, height)
 
