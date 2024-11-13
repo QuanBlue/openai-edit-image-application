@@ -6,9 +6,10 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+
 def show():
     st.header("Application")
-    
+
     # prompt input
     prompt = st.text_input("Input your prompt:", placeholder="Prompt")
     bg_image = st.file_uploader(
@@ -19,22 +20,36 @@ def show():
         img_proc.save_gen_image(bg_image)
         pg_proc.go_to_page("edit-image-page")
 
+    submit_btn_col, announce_col = st.columns([1, 5])
+
+    # button col
+    with submit_btn_col:
+        submit_button = st.button("Submit")
+    with announce_col:
+        announce_container = st.empty()
+
+    
     # case user input prompt
-    if st.button("Submit"):
+    if submit_button:
         if prompt == "":
             st.warning("Please input prompt before continuing!")
         else:
-            client = OpenAI()
-            response = client.images.generate(
-                model="dall-e-3",
-                prompt=prompt,
-                size="1024x1024",
-                quality="standard",
-                n=1,
-            )
-            
-            image_url = response.data[0].url
-            img_proc.save_gen_image(image_url)
+            with announce_container.container():
+                with st.spinner('Generating image...'):
+                    client = OpenAI()
+                    response = client.images.generate(
+                        model="dall-e-3",
+                        prompt=prompt,
+                        size="1024x1024",
+                        quality="standard",
+                        n=1,
+                    )
+
+                # save generated image
+                with st.spinner('Loading image...'):
+                    image_url = response.data[0].url
+                    img_proc.save_gen_image(image_url)
 
             # go to page
             pg_proc.go_to_page("edit-image-page")
+

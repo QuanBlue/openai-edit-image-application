@@ -10,7 +10,6 @@ from pages import home, edit_image
 if 'initial_sidebar_state' not in st.session_state:
     st.session_state.initial_sidebar_state = "collapsed"
 
-
 if 'canvas_width' not in st.session_state or 'canvas_height' not in st.session_state:
     st.session_state.canvas_width = config.IMG_MAX_WIDTH
     st.session_state.canvas_height = config.IMG_MAX_HEIGH

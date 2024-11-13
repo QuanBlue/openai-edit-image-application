@@ -23,6 +23,18 @@ def show():
     # expand sidebar
     st.session_state.initial_sidebar_state = "expanded"
 
+    # edit option tools
+    brush_sz_col, download_btn_col, announce_col, _ = st.columns([2, 1, 5, 5])
+    with brush_sz_col:
+        stroke_width = st.slider(
+            ">", 1, 150, 50, format="", label_visibility="collapsed")
+    with announce_col:
+        announce_container = st.empty()
+    with download_btn_col:
+        if st.button(">", icon=":material/download:", help="Download Image", use_container_width=True):
+            img_proc.download_image(
+                st.session_state.no_gen_img, announce_container)
+
     # sidebar
     with st.sidebar:
         st.header("Application")
@@ -45,19 +57,22 @@ def show():
                 removed_image.save("removed_image.png")
                 st.session_state.scaled_gen_image.save("base_image.png")
 
-                # call OpenAI API
-                client = OpenAI()
-                response = client.images.edit(
-                    model="dall-e-2",
-                    image=open("base_image.png", 'rb'),
-                    mask=open("removed_image.png", 'rb'),
-                    prompt=change_prompt,
-                    n=1,
-                )
-
-                # save generated image
-                image_url = response.data[0].url
-                img_proc.save_gen_image(image_url)
+                with announce_container:
+                    # call OpenAI API
+                    with st.spinner('Generating image...'):
+                        client = OpenAI()
+                        response = client.images.edit(
+                            model="dall-e-2",
+                            image=open("base_image.png", 'rb'),
+                            mask=open("removed_image.png", 'rb'),
+                            prompt=change_prompt,
+                            n=1,
+                        )
+                
+                    # save generated image
+                    with st.spinner('Loading image...'):
+                        image_url = response.data[0].url
+                        img_proc.save_gen_image(image_url)
 
                 # reset canvas
                 st.session_state.canvas_result = None
@@ -93,17 +108,17 @@ def show():
     st.session_state.scaled_gen_image, st.session_state.canvas_width, st.session_state.canvas_height = img_proc.scale_image(
         gen_image)
 
-    # edit option tools
-    brush_sz_col, download_btn_col, announce_col, _ = st.columns([2, 1, 5, 5])
-    with brush_sz_col:
-        stroke_width = st.slider(
-            ">", 1, 150, 50, format="", label_visibility="collapsed")
-    with announce_col:
-        announce_container = st.container()
-    with download_btn_col:
-        if st.button(">", icon=":material/download:", help="Download Image", use_container_width=True):
-            img_proc.download_image(
-                st.session_state.no_gen_img, announce_container)
+    # # edit option tools
+    # brush_sz_col, download_btn_col, announce_col, _ = st.columns([2, 1, 5, 5])
+    # with brush_sz_col:
+    #     stroke_width = st.slider(
+    #         ">", 1, 150, 50, format="", label_visibility="collapsed")
+    # with announce_col:
+    #     announce_container = st.container()
+    # with download_btn_col:
+    #     if st.button(">", icon=":material/download:", help="Download Image", use_container_width=True):
+    #         img_proc.download_image(
+    #             st.session_state.no_gen_img, announce_container)
 
     # canvas
     st.session_state.canvas_result = st_canvas(

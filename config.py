@@ -11,17 +11,18 @@ IMG_LOAD_TIME = 1
 # css config
 APP_CSS = """
     header {
-        visibility: hidden
+        visibility: hidden;
     }
 
     .stMainBlockContainer {
-        padding-top: 1rem
-        padding-bottom: 1rem
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     div[data-testid="stSidebarNav"] {
         display: none;
     }
+
     """
 
 CANVAS_CSS = """      
