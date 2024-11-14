@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./assets/facebook-logo.png" alt="icon" width="200"></img>
+  <img src="./assets/logo.jpeg" alt="icon" width="200" style="border-radius: 20px"></img>
   <br>
   <b>Edit image application by OpenAI</b>
 </h1>
@@ -30,6 +30,7 @@
 
 <p align="center">
   <b>
+      <a href="https://youtu.be/kg0zEnZUuwg">Demo</a> •
       <a href="https://github.com/QuanBlue/openai-edit-image-application">Documentation</a> •
       <a href="https://github.com/QuanBlue/openai-edit-image-application/issues/">Report Bug</a> •
       <a href="https://github.com/QuanBlue/openai-edit-image-application/issues/">Request Feature</a>
@@ -38,9 +39,27 @@
 
 <br/>
 
+<div align="center">
+  <div>
+    <img src="./assets/demo_app_1.gif" height="350" alt="pc demo"/>
+    <div>
+      <i>Generate image demo</i>
+    </div>
+  </div>
+  <br/>
+  <div >
+    <img src="./assets/demo_app_2.gif" height="350" alt="mobile demo"/>
+    <div>
+      <i>Edit image demo</i>
+    </div>
+  </div>
+</div>
+
+
 <details open>
 <summary><b>📖 Table of Contents</b></summary>
 
+- [Demo](#demo)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
@@ -53,6 +72,10 @@
 - [Reference](#reference)
 - [License](#license)
 </details>
+
+# Demo
+
+Checkout demo: https://youtu.be/kg0zEnZUuwg
 
 # Key Features
 
